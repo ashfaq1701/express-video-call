@@ -6,8 +6,6 @@
 
 var app = require('../app');
 var debug = require('debug')('express-video-call:server');
-var http = require('http');
-var ExpressPeerServer = require('peer').ExpressPeerServer;
 
 /**
  * Get port from environment and store in Express.
@@ -20,13 +18,8 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var peerOptions = {
-	debug: true
-};
-
-var server = http.createServer(app);
-
-app.use('/peerjs', ExpressPeerServer(server, peerOptions));
+var server = require('../servers/server');
+server = require('../servers/peer-server');
 
 /**
  * Listen on provided port, on all network interfaces.
