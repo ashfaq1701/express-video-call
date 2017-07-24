@@ -2,12 +2,14 @@ var express = require('express');
 var passport = require('passport');
 var User = require('../models/user');
 var router = express.Router();
+var ifNotAuthenticated = require('../middlewares/ifNotAuthenticated');
+var ifAuthenticated = require('../middlewares/ifAuthenticated');
 
-router.get('/register', function(req, res) {
+router.get('/register', ifNotAuthenticated, function(req, res) {
     res.render('register', { });
 });
 
-router.post('/register', function(req, res, next) {
+router.post('/register', ifNotAuthenticated, function(req, res, next) {
     User.register(new User({ email : req.body.email }), req.body.password, function(err, user) {
         if (err) {
           return res.render('register', { error : err.message });
@@ -24,11 +26,11 @@ router.post('/register', function(req, res, next) {
     });
 });
 
-router.get('/login', function(req, res) {
+router.get('/login', ifNotAuthenticated, function(req, res) {
     res.render('login', { user : req.user, flash: req.flash() });
 });
 
-router.post('/login', passport.authenticate('local', { 
+router.post('/login', ifNotAuthenticated, passport.authenticate('local', { 
 		failureRedirect: '/auth/login', 
 		failureFlash: true 
 	}), 
@@ -42,7 +44,7 @@ router.post('/login', passport.authenticate('local', {
 	}
 );
 
-router.get('/logout', function(req, res) {
+router.get('/logout', ifAuthenticated, function(req, res) {
     req.logout();
     res.redirect('/');
 });

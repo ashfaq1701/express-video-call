@@ -6,7 +6,7 @@ var ifAuthenticated = function(req, res, next)
 	}
 	else
 	{
-		res.redirect('/login');
+		res.redirect('/auth/login');
 	}
 };
 
